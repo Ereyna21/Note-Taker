@@ -16,7 +16,7 @@ app.get('/', (req, res) =>
 );
 
 // GET request for notes
-app.get('/api/notes', (req, res) => {
+app.get('/', (req, res) => {
   // Read notes from the file and send them as a response
   fs.readFile('./db/notes.json', 'utf8', (err, data) => {
     if (err) {
@@ -35,17 +35,21 @@ app.get('/notes', (req, res) => {
 });
 
 // POST request to add a note
-app.post('/api/notes', (req, res) => {
-  console.info(`${req.method} request received to add a note`);
-
-  const { title, text } = req.body;
-
-  if (title && text) {
-    const newNote = {
-      title,
-      text,
-      id: uuid(),
-    };
+      app.post('/notes', (req, res) => {
+        console.info(`${req.method} request received to add a note`);
+      
+        const { title, text } = req.body;
+      
+        if (!title || !text) {
+          res.status(400).json('Bad request. Title and text are required');
+          return;
+        }
+      
+        const newNote = {
+          title,
+          text,
+          id: uuid(),
+        };
 
     fs.readFile('./db/notes.json', 'utf8', (err, data) => {
       if (err) {
@@ -70,9 +74,6 @@ app.post('/api/notes', (req, res) => {
         );
       }
     });
-  } else {
-    res.status(400).json('Bad request. Title and text are required');
-  }
 });
 
 app.listen(PORT, () =>

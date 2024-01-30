@@ -34,7 +34,7 @@ const getNotes = () =>
   fetch('/notes', {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
+      'Accept': './db/notes.json',
     },
   }).catch(error => console.error('Error fetching notes:', error));
 
@@ -42,16 +42,16 @@ const postNote = (note) =>
   fetch('/notes', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': './db/notes.json'
     },
     body: JSON.stringify(note)
   });
 
 const deleteNote = (id) =>
-  fetch(`/api/notes/${id}`, {
+  fetch(`/notes/${id}`, {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': '/db/notes.json'
     }
   });
 
@@ -88,7 +88,7 @@ const handleNoteSave = () => {
 // Delete the clicked note
 const handleNoteDelete = (e) => {
   // Prevents the click listener for the list from being called when the button inside of it is clicked
-  e.stopPropagation();
+  // e.stopPropagation();
 
   const note = e.target;
   const noteId = JSON.parse(note.parentElement.getAttribute('data-note')).id;
@@ -187,6 +187,7 @@ const renderNoteList = async (notes) => {
 const getAndRenderNotes = () => getNotes().then(renderNoteList);
 
 if (window.location.pathname === '/notes') {
+  console.log(saveNoteBtn)
   saveNoteBtn.addEventListener('click', handleNoteSave);
   newNoteBtn.addEventListener('click', handleNewNoteView);
   clearBtn.addEventListener('click', renderActiveNote);
