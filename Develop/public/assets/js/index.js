@@ -4,15 +4,17 @@ let noteText;
 let saveNoteBtn;
 let newNoteBtn;
 let noteList;
+let clearBtn;
 
 if (window.location.pathname === '/notes') {
   noteForm = document.querySelector('.note-form');
   noteTitle = document.querySelector('.note-title');
   noteText = document.querySelector('.note-textarea');
   saveNoteBtn = document.querySelector('.save-note');
-  newNoteBtn = document.querySelector('.new-note');
+  newNoteBtn = document.querySelector('.icons .new-note');
   clearBtn = document.querySelector('.clear-btn');
   noteList = document.querySelectorAll('.list-container .list-group');
+ 
 }
 
 // Show an element
@@ -20,24 +22,24 @@ const show = (elem) => {
   elem.style.display = 'inline';
 };
 
-// Hide an element
 const hide = (elem) => {
   elem.style.display = 'none';
 };
+
 
 // activeNote is used to keep track of the note in the textarea
 let activeNote = {};
 
 const getNotes = () =>
-  fetch('/api/notes', {
+  fetch('/notes', {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json'
-    }
-  });
+      'Content-Type': 'application/json',
+    },
+  }).catch(error => console.error('Error fetching notes:', error));
 
-const saveNote = (note) =>
-  fetch('/api/notes', {
+const postNote = (note) =>
+  fetch('/notes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -77,7 +79,7 @@ const handleNoteSave = () => {
     title: noteTitle.value,
     text: noteText.value
   };
-  saveNote(newNote).then(() => {
+  postNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
   });
