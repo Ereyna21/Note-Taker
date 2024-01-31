@@ -48,6 +48,22 @@ app.post('/api/notes', async (req, res) => {
 
 });
 
+app.delete('/api/notes/:id', async (req, res) => {
+  console.info(`${req.method} request received to delete a note`);
+
+  try {
+    const rawNotes = await fs.readFile('./db/db.json', 'utf-8');
+    const notes = JSON.parse(rawNotes);
+
+    const noteId = req.params.id;
+    const updatedNotes = notes.filter((note) => note.id !== noteId);
+
+    await fs.writeFile('./db/db.json', JSON.stringify(updatedNotes));
+    res.json(updatedNotes);
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 
 app.listen(PORT, () => {
